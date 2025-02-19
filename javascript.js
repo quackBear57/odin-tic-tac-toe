@@ -13,15 +13,16 @@ function gameboard() {
     const getBoard = () => board;
 
     const markSquare = (row, column, player) => {
-        if (!board[row][column].getValue() === '') {
-            board[row][column].addMark();
+        if (board[row][column].getValue() === '') {
+            console.log(`adding mark ${player} to ${row - 1}, ${column - 1}`)
+            board[row][column].addMark(player);
         } else {
             return;
         }
     };
 
     const printBoard = () => {
-        const boardWithMarks = board.map((row) => row.map((cell) => cell.getValue()))
+        const boardWithMarks = board.map((row) => row.map((square) => square.getValue()));
         console.log(boardWithMarks);
     };
 
@@ -47,5 +48,7 @@ function square() {
     };
 }
 
-gameboard();
-gameboard.printBoard();
+game = gameboard();
+game.printBoard();
+game.markSquare(1,1,{player: 'Nathan', value: 'x'});
+game.printBoard();
