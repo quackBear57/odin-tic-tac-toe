@@ -13,17 +13,18 @@ function gameboard() {
     const getBoard = () => board;
 
     const markSquare = (row, column, player) => {
-        let changeTurns = true;
-                
+        let changeTurns = false;
+        let endGame = false;
+        let winningPlayer = player;
+
         if (board[row][column].getValue() === '') {
             console.log(`adding mark "${player.markSymbol}" to (${row}, ${column})`);
             board[row][column].addMark(player.markSymbol);
             changeTurns = true;
-            const endGameCheck = checkWin();
-            // console.log({endGameCheck});
+            endGame = checkWin();
             return {
                 changeTurns,
-                endGameCheck
+                endGame
             };
         } else {
             console.log(`invalid move, space at (${row}, ${column}) already taken`);
@@ -40,63 +41,39 @@ function gameboard() {
 
     const checkWin = () => {
         let winCondition = false;
-        let winningMark = "";
         
-        console.log(`value at 0,0 ${board[0][0].getValue()}`);
-
-        //come back to this logic, ensure nothing is all blank for win
-
         // check rows
-        for (let i = 0; i < board.length; i++) {
-            if (board[i][0].getValue() === '') {
-                // nothing
-            } else if (board[i][0].getValue() === board[i][1].getValue()) {
-                // check next row
-                if (board[i][0].getValue() === board[i][2].getValue()) {
-                    // win!
+        for (let i = 0; i < 3; i++) {
+            if (board[i][0].getValue() == board[i][1].getValue() &&
+                board[i][0].getValue() == board[i][2].getValue() &&
+                board[i][0].getValue() !== '') {
                     winCondition = true;
-                    winningMark = board[i][0].getValue();
                 }
-            }
         }
 
-        // check columns
-        for (let j = 0; j < board[0].length; j++) {
-            if (board[0][j].getValue() === '') {
-                // nothing
-            } else if (board[0][j].getValue() === board[1][j].getValue()) {
-                //check next column
-                if (board[0][j].getValue() === board[2][j].getValue()) {
+        for (let j = 0; j < 3; j++) {
+            if (board[0][j].getValue() == board[1][j].getValue() &&
+                board[0][j].getValue() == board[2][j].getValue() &&
+                board[0][j].getValue() !== '') {
                     winCondition = true;
-                    winningMark = board[0][j].getValue();
                 }
-            }
         }
 
         // check diagonal 1
-        if (board[0][0].getValue() === "") {
-            // nothing
-        } else if (board[0][0].getValue() === board[1][1].getValue()) {
-            // check next
-            if (board[0][0].getValue() === board[2][2].getValue()) {
+        if (board[0][0].getValue() == board[1][1].getValue() &&
+            board[0][0].getValue() == board[2][2].getValue() &&
+            board[0][0].getValue() !== '') {
                 winCondition = true;
-                winningMark = board[1][1].getValue();
-            }
         }
 
         // check diagonal 2
-        if (board[2][0].getValue() === board[1][1].getValue()) {
-            // check next
-            if (board[2][0].getValue() === board[0][2].getValue()) {
-                winCondition = true;
-                winningMark = board[1][1].getValue();
-            }
+        if (board[2][0].getValue() == board[1][1].getValue() &&
+        board[2][0].getValue() == board[0][2].getValue() &&
+        board[2][0].getValue() !== '') {
+            winCondition = true;
         }
         
-        return {
-            winCondition,
-            winningPlayer: winningMark
-        };
+        return winCondition;
     }
 
     return {
@@ -149,13 +126,11 @@ function gameController(
 
     // let changeTurnAfterRound = true;
     const playRound = (row, column) => {
-        let changeTurnAfterRound = board.markSquare(row, column, getActivePlayer());
-        // console.log({changeTurnAfterRound});
-        console.log(changeTurnAfterRound.endGameCheck.winCondition);
-        if (changeTurnAfterRound.endGameCheck.winCondition === true) {
+        let postRound = board.markSquare(row, column, getActivePlayer());
+        if (postRound.endGame == true) {
             board.printBoard();
-            console.log(`Game over! ${changeTurnAfterRound.endGameCheck.winningPlayer} wins!`);
-        } else if (changeTurnAfterRound.changeTurns === true) {
+            console.log(`Game over! ${getActivePlayer().name} wins!`);
+        } else if (postRound.changeTurns == true) {
             changePlayers();
             printNewRound();
         } else {
