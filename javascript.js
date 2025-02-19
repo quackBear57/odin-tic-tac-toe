@@ -16,10 +16,10 @@ function gameboard() {
 
     const markSquare = (row, column, player) => {
         if (board[row][column].getValue() === '') {
-            console.log(`adding mark ${player.markSymbol} to ${row}, ${column}`)
+            console.log(`adding mark ${player.markSymbol} to ${row}, ${column}`);
             board[row][column].addMark(player.markSymbol);
             changeTurns = true;
-            return changeTurns
+            return changeTurns;
         } else {
             console.log(`invalid move, space at ${row}, ${column} already taken`);
             changeTurns = false;
