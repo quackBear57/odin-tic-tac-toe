@@ -15,16 +15,18 @@ function gameboard() {
     const markSquare = (row, column, player) => {
         let changeTurns = false;
         let endGame = false;
-        let winningPlayer = player;
+        let tieGame = false;
 
         if (board[row][column].getValue() === '') {
             console.log(`adding mark "${player.markSymbol}" to (${row}, ${column})`);
             board[row][column].addMark(player.markSymbol);
             changeTurns = true;
             endGame = checkWin();
+            tieGame = checkTie();
             return {
                 changeTurns,
-                endGame
+                endGame,
+                tieGame
             };
         } else {
             console.log(`invalid move, space at (${row}, ${column}) already taken`);
@@ -74,6 +76,18 @@ function gameboard() {
         }
         
         return winCondition;
+    }
+
+    const checkTie = () => {
+
+        let row1Blank = board[0].filter((square) => square.getValue.length == 0);
+        let row2Blank = board[1].filter((square) => square.getValue.length == 0);
+        let row3Blank = board[2].filter((square) => square.getValue.length == 0);
+        
+        if (row1Blank.length > 0 && row2Blank.length > 0 && row3Blank.length > 0) {
+            return false;
+        } else return true;
+
     }
 
     return {
@@ -130,6 +144,9 @@ function gameController(
         if (postRound.endGame == true) {
             board.printBoard();
             console.log(`Game over! ${getActivePlayer().name} wins!`);
+        } else if (postRound.tieGame == true) {
+            board.printBoard();
+            console.log('Game over! Tie!');
         } else if (postRound.changeTurns == true) {
             changePlayers();
             printNewRound();
