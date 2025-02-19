@@ -80,13 +80,15 @@ function gameboard() {
 
     const checkTie = () => {
 
-        let row1Blank = board[0].filter((square) => square.getValue.length == 0);
-        let row2Blank = board[1].filter((square) => square.getValue.length == 0);
-        let row3Blank = board[2].filter((square) => square.getValue.length == 0);
-        
-        if (row1Blank.length > 0 && row2Blank.length > 0 && row3Blank.length > 0) {
-            return false;
-        } else return true;
+        let row1Blank = board[0].filter((square) => square.getValue().length == 0);
+        let row2Blank = board[1].filter((square) => square.getValue().length == 0);
+        let row3Blank = board[2].filter((square) => square.getValue().length == 0);
+
+        console.log(row1Blank.length);
+
+        if (row1Blank.length + row2Blank.length + row3Blank.length == 0) {
+            return true;
+        } else return false;
 
     }
 
@@ -138,7 +140,6 @@ function gameController(
         console.log(`${getActivePlayer().name}'s turn.`);
     };
 
-    // let changeTurnAfterRound = true;
     const playRound = (row, column) => {
         let postRound = board.markSquare(row, column, getActivePlayer());
         if (postRound.endGame == true) {
