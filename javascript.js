@@ -14,9 +14,11 @@ function gameboard() {
 
     const markSquare = (row, column, player) => {
         if (board[row][column].getValue() === '') {
-            console.log(`adding mark ${player} to ${row - 1}, ${column - 1}`)
-            board[row][column].addMark(player);
+            console.log(`adding mark ${player} to ${row}, ${column}`)
+            board[row][column].addMark(player.value);
         } else {
+            console.log(`invalid move, space at ${row}, ${column} already taken by ${player.name}`);
+
             return;
         }
     };
@@ -50,5 +52,7 @@ function square() {
 
 game = gameboard();
 game.printBoard();
-game.markSquare(1,1,{player: 'Nathan', value: 'x'});
+game.markSquare(1,1,{name: 'Nathan', value: 'x'});
+game.printBoard();
+game.markSquare(1,1,{name: 'Nathan', value: 'x'});
 game.printBoard();
