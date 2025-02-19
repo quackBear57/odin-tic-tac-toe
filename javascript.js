@@ -12,19 +12,25 @@ function gameboard() {
 
     const getBoard = () => board;
 
-    let changeTurns = true;
-
     const markSquare = (row, column, player) => {
+        let changeTurns = true;
+                
         if (board[row][column].getValue() === '') {
             console.log(`adding mark "${player.markSymbol}" to (${row}, ${column})`);
             board[row][column].addMark(player.markSymbol);
             changeTurns = true;
-            return changeTurns;
+            const endGameCheck = checkWin();
+            // console.log({endGameCheck});
+            return {
+                changeTurns,
+                endGameCheck
+            };
         } else {
             console.log(`invalid move, space at (${row}, ${column}) already taken`);
             changeTurns = false;
             return changeTurns;
         }
+
     };
 
     const printBoard = () => {
@@ -34,68 +40,62 @@ function gameboard() {
 
     const checkWin = () => {
         let winCondition = false;
-        let winningPlayer = "";
+        let winningMark = "";
         
+        console.log(`value at 0,0 ${board[0][0].getValue()}`);
+
+        //come back to this logic, ensure nothing is all blank for win
+
         // check rows
         for (let i = 0; i < board.length; i++) {
-            if (board[i][0] === board[i][1]) {
+            if (board[i][0].getValue() === '') {
+                // nothing
+            } else if (board[i][0].getValue() === board[i][1].getValue()) {
                 // check next row
-                if (board[i][0] === board[i][2]) {
+                if (board[i][0].getValue() === board[i][2].getValue()) {
                     // win!
                     winCondition = true;
-                    winningPlayer = board[i][0].getValue().name;
-                    return {
-                        winCondition,
-                        winningPlayer
-                    };
+                    winningMark = board[i][0].getValue();
                 }
             }
         }
 
         // check columns
         for (let j = 0; j < board[0].length; j++) {
-            if (board[0][j] === board[1][j]) {
+            if (board[0][j].getValue() === '') {
+                // nothing
+            } else if (board[0][j].getValue() === board[1][j].getValue()) {
                 //check next column
-                if (board[0][j] === board[2][j]) {
+                if (board[0][j].getValue() === board[2][j].getValue()) {
                     winCondition = true;
-                    winningPlayer = board[0][j].getValue().name;
-                    return {
-                        winCondition,
-                        winningPlayer
-                    };
+                    winningMark = board[0][j].getValue();
                 }
             }
         }
 
         // check diagonal 1
-        if (board[0][0] === board[1][1]) {
+        if (board[0][0].getValue() === "") {
+            // nothing
+        } else if (board[0][0].getValue() === board[1][1].getValue()) {
             // check next
-            if (board[0][0] === board[2][2]) {
+            if (board[0][0].getValue() === board[2][2].getValue()) {
                 winCondition = true;
-                winningPlayer = board[1][1].getValue().name;
-                return {
-                    winCondition,
-                    winningPlayer
-                };
-        }
+                winningMark = board[1][1].getValue();
+            }
         }
 
         // check diagonal 2
-        if (board[2][0] === board[1][1]) {
+        if (board[2][0].getValue() === board[1][1].getValue()) {
             // check next
-            if (board[2][0] === board[0][2]) {
+            if (board[2][0].getValue() === board[0][2].getValue()) {
                 winCondition = true;
-                winningPlayer = board[1][1].getValue().name;
-                return {
-                    winCondition,
-                    winningPlayer
-                };
+                winningMark = board[1][1].getValue();
             }
         }
         
         return {
             winCondition,
-            winningPlayer
+            winningPlayer: winningMark
         };
     }
 
@@ -147,15 +147,15 @@ function gameController(
         console.log(`${getActivePlayer().name}'s turn.`);
     };
 
-    let changeTurnAfterRound = true;
+    // let changeTurnAfterRound = true;
     const playRound = (row, column) => {
-        changeTurnAfterRound = board.markSquare(row, column, getActivePlayer());
-        if (changeTurnAfterRound === true) {
-            endGame = board.checkWin();
-            if (endGame.winCondition === true) {
-                console.log(`${endGame.winningPlayer} wins!`);
-                return;
-            }
+        let changeTurnAfterRound = board.markSquare(row, column, getActivePlayer());
+        // console.log({changeTurnAfterRound});
+        console.log(changeTurnAfterRound.endGameCheck.winCondition);
+        if (changeTurnAfterRound.endGameCheck.winCondition === true) {
+            board.printBoard();
+            console.log(`Game over! ${changeTurnAfterRound.endGameCheck.winningPlayer} wins!`);
+        } else if (changeTurnAfterRound.changeTurns === true) {
             changePlayers();
             printNewRound();
         } else {
