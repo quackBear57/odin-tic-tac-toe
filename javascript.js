@@ -81,9 +81,9 @@ function gameboard() {
         }
 
         // check diagonal 2
-        if (board[3][0] === board[1][1]) {
+        if (board[2][0] === board[1][1]) {
             // check next
-            if (board[3][0] === board[0][3]) {
+            if (board[2][0] === board[0][2]) {
                 winCondition = true;
                 winningPlayer = board[1][1].getValue().name;
                 return {
@@ -151,6 +151,11 @@ function gameController(
     const playRound = (row, column) => {
         changeTurnAfterRound = board.markSquare(row, column, getActivePlayer());
         if (changeTurnAfterRound === true) {
+            endGame = board.checkWin();
+            if (endGame.winCondition === true) {
+                console.log(`${endGame.winningPlayer} wins!`);
+                return;
+            }
             changePlayers();
             printNewRound();
         } else {
