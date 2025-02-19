@@ -16,12 +16,12 @@ function gameboard() {
 
     const markSquare = (row, column, player) => {
         if (board[row][column].getValue() === '') {
-            console.log(`adding mark ${player.markSymbol} to ${row}, ${column}`);
+            console.log(`adding mark "${player.markSymbol}" to (${row}, ${column})`);
             board[row][column].addMark(player.markSymbol);
             changeTurns = true;
             return changeTurns;
         } else {
-            console.log(`invalid move, space at ${row}, ${column} already taken`);
+            console.log(`invalid move, space at (${row}, ${column}) already taken`);
             changeTurns = false;
             return changeTurns;
         }
@@ -32,10 +32,78 @@ function gameboard() {
         console.log(boardWithMarks);
     };
 
+    const checkWin = () => {
+        let winCondition = false;
+        let winningPlayer = "";
+        
+        // check rows
+        for (let i = 0; i < board.length; i++) {
+            if (board[i][0] === board[i][1]) {
+                // check next row
+                if (board[i][0] === board[i][2]) {
+                    // win!
+                    winCondition = true;
+                    winningPlayer = board[i][0].getValue().name;
+                    return {
+                        winCondition,
+                        winningPlayer
+                    };
+                }
+            }
+        }
+
+        // check columns
+        for (let j = 0; j < board[0].length; j++) {
+            if (board[0][j] === board[1][j]) {
+                //check next column
+                if (board[0][j] === board[2][j]) {
+                    winCondition = true;
+                    winningPlayer = board[0][j].getValue().name;
+                    return {
+                        winCondition,
+                        winningPlayer
+                    };
+                }
+            }
+        }
+
+        // check diagonal 1
+        if (board[0][0] === board[1][1]) {
+            // check next
+            if (board[0][0] === board[2][2]) {
+                winCondition = true;
+                winningPlayer = board[1][1].getValue().name;
+                return {
+                    winCondition,
+                    winningPlayer
+                };
+        }
+        }
+
+        // check diagonal 2
+        if (board[3][0] === board[1][1]) {
+            // check next
+            if (board[3][0] === board[0][3]) {
+                winCondition = true;
+                winningPlayer = board[1][1].getValue().name;
+                return {
+                    winCondition,
+                    winningPlayer
+                };
+            }
+        }
+        
+        return {
+            winCondition,
+            winningPlayer
+        };
+    }
+
     return {
         getBoard,
         markSquare,
-        printBoard
+        printBoard,
+        checkWin
     };
 }
 
