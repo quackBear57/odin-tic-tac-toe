@@ -92,11 +92,20 @@ function gameboard() {
 
     }
 
+    const resetBoard = () => {
+        for (let i = 0; i < rows; i++) {
+            for (let j = 0; j < cols; j++) {
+                board[i][j] = square();
+            }
+        }
+    }
+
+
     return {
         getBoard,
         markSquare,
         printBoard,
-        checkWin
+        resetBoard
     };
 }
 
@@ -145,9 +154,13 @@ function gameController(
         if (postRound.endGame == true) {
             board.printBoard();
             console.log(`Game over! ${getActivePlayer().name} wins!`);
+            board.resetBoard();
+            printNewRound();
         } else if (postRound.tieGame == true) {
             board.printBoard();
             console.log('Game over! Tie!');
+            board.resetBoard();
+            printNewRound();
         } else if (postRound.changeTurns == true) {
             changePlayers();
             printNewRound();
