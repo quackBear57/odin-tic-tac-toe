@@ -12,14 +12,18 @@ function gameboard() {
 
     const getBoard = () => board;
 
+    let changeTurns = true;
+
     const markSquare = (row, column, player) => {
         if (board[row][column].getValue() === '') {
-            console.log(`adding mark ${player} to ${row}, ${column}`)
-            board[row][column].addMark(player.value);
+            console.log(`adding mark ${player.markSymbol} to ${row}, ${column}`)
+            board[row][column].addMark(player.markSymbol);
+            changeTurns = true;
+            return changeTurns
         } else {
-            console.log(`invalid move, space at ${row}, ${column} already taken by ${player.name}`);
-
-            return;
+            console.log(`invalid move, space at ${row}, ${column} already taken`);
+            changeTurns = false;
+            return changeTurns;
         }
     };
 
@@ -50,9 +54,48 @@ function square() {
     };
 }
 
-game = gameboard();
-game.printBoard();
-game.markSquare(1,1,{name: 'Nathan', value: 'x'});
-game.printBoard();
-game.markSquare(1,1,{name: 'Nathan', value: 'x'});
-game.printBoard();
+function gameController(
+    playerOneName = "Player 1",
+    playerTwoName = "Player 2"
+) {
+
+    const players = [
+        {name: playerOneName, markSymbol: 'x'},
+        {name: playerTwoName, markSymbol: 'o'}
+    ];
+    
+    const board = gameboard();
+
+    let activePlayer = players[0];
+
+    const changePlayers = () => {
+        activePlayer = activePlayer === players[0] ? players[1] : players[0];
+    };
+
+    const getActivePlayer = () => activePlayer;
+
+    const printNewRound = () => {
+        board.printBoard();
+        console.log(`${getActivePlayer().name}'s turn.`);
+    };
+
+    let changeTurnAfterRound = true;
+    const playRound = (row, column) => {
+        changeTurnAfterRound = board.markSquare(row, column, getActivePlayer());
+        if (changeTurnAfterRound === true) {
+            changePlayers();
+            printNewRound();
+        } else {
+            printNewRound();
+        }
+    };
+
+    printNewRound();
+
+    return {
+        playRound,
+        getActivePlayer
+    };
+}
+
+const game = gameController();
