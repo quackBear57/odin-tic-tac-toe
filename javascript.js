@@ -18,7 +18,7 @@ function gameboard() {
         let tieGame = false;
 
         if (board[row][column].getValue() === '') {
-            console.log(`adding mark "${player.markSymbol}" to (${row}, ${column})`);
+            // console.log(`adding mark "${player.markSymbol}" to (${row}, ${column})`);
             board[row][column].addMark(player.markSymbol);
             document.querySelector(`[index="${row}${column}"]`).textContent = player.markSymbol;
             changeTurns = true;
@@ -85,8 +85,6 @@ function gameboard() {
         let row2Blank = board[1].filter((square) => square.getValue().length == 0);
         let row3Blank = board[2].filter((square) => square.getValue().length == 0);
 
-        console.log(row1Blank.length);
-
         if (row1Blank.length + row2Blank.length + row3Blank.length == 0) {
             return true;
         } else return false;
@@ -103,6 +101,7 @@ function gameboard() {
         for (const squareDiv of squareDivs) {
             squareDiv.textContent = " ";
         }
+        gameOver = false;
     }
 
 
@@ -138,13 +137,14 @@ function gameController(
         {name: playerOneName, markSymbol: 'x'},
         {name: playerTwoName, markSymbol: 'o'}
     ];
-    
+
     const board = gameboard();
 
     let activePlayer = players[0];
 
     const changePlayers = () => {
         activePlayer = activePlayer === players[0] ? players[1] : players[0];
+        document.querySelector('#currentPlayer').textContent = activePlayer.name;
     };
 
     const getActivePlayer = () => activePlayer;
@@ -157,20 +157,22 @@ function gameController(
     const playRound = (row, column) => {
         let postRound = board.markSquare(row, column, getActivePlayer());
         if (postRound.endGame == true) {
-            board.printBoard();
+            // board.printBoard();
+            gameOver = true;
             console.log(`Game over! ${getActivePlayer().name} wins!`);
             // board.resetBoard();
             // printNewRound();
         } else if (postRound.tieGame == true) {
-            board.printBoard();
+            // board.printBoard();
+            gameOver = true;
             console.log('Game over! Tie!');
             // board.resetBoard();
             // printNewRound();
         } else if (postRound.changeTurns == true) {
             changePlayers();
-            printNewRound();
+            // printNewRound();
         } else {
-            printNewRound();
+            // printNewRound();
         }
     };
 
@@ -178,7 +180,7 @@ function gameController(
         board.resetBoard();
     }
 
-    printNewRound();
+    // printNewRound();
 
     return {
         playRound,
@@ -187,9 +189,9 @@ function gameController(
     };
 }
 
+let game = gameController("Player 1", "Player 2");
+let gameOver = false;
 // UI
-
-let game = gameController();
 
 const gameContainer = document.querySelector(".gameContainer");
 
@@ -205,7 +207,9 @@ for (let i = 0; i < 3; i++) {
         square.addEventListener("click", () => {
             const row = document.querySelector(`[index="${i}${j}"]`).getAttribute('index').substring(0,1);
             const col = document.querySelector(`[index="${i}${j}"]`).getAttribute('index').substring(1,2);
-            game.playRound(row, col);
+            if (gameOver == false) {
+                game.playRound(row, col);
+            }
         });
     }
 }
@@ -213,8 +217,11 @@ for (let i = 0; i < 3; i++) {
 const newGameButton = document.querySelector('#newGameButton');
 
 newGameButton.addEventListener('click', () => {
-    const player1Name = document.querySelector('#player1Name').value;
-    const player2Name = document.querySelector('#player2Name').value;
+    let player1Name = document.querySelector('#player1Name').value;
+    let player2Name = document.querySelector('#player2Name').value;
+    player1Name == "" ? player1Name = "Player 1" : player1Name = player1Name;
+    player2Name == "" ? player2Name = "Player 2" : player2Name = player2Name;
     game = gameController(player1Name, player2Name);
     game.resetGame();
+    document.querySelector('#currentPlayer').textContent = player1Name;
 })
