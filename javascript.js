@@ -20,6 +20,7 @@ function gameboard() {
         if (board[row][column].getValue() === '') {
             console.log(`adding mark "${player.markSymbol}" to (${row}, ${column})`);
             board[row][column].addMark(player.markSymbol);
+            document.querySelector(`[index="${row}${column}"]`).textContent = player.markSymbol;
             changeTurns = true;
             endGame = checkWin();
             tieGame = checkTie();
@@ -179,22 +180,29 @@ function gameController(
 
 // UI
 
+let game = gameController();
+
 const gameContainer = document.querySelector(".gameContainer");
 
 for (let i = 0; i < 3; i++) {
     for (let j = 0; j < 3; j++) {
         const square = document.createElement("div");
-        // square.classList(`gameSquare index${i}${j}`);
         square.setAttribute('class', `gameSquare row${i} col${j}`);
-        square.setAttribute('row', `${i}`);
-        square.setAttribute('col', `${j}`);
+        square.setAttribute('index', `${i}${j}`);
+        // square.setAttribute('col', `${j}`);
         square.textContent = "square";
         gameContainer.appendChild(square);
 
         square.addEventListener("click", () => {
-            const row = document.querySelector(`[row="${i}"]`).getAttribute('row');
-            const col = document.querySelector(`[col="${j}"]`).getAttribute('col');
-            console.log(`${row}, ${col}`);
+            const row = document.querySelector(`[index="${i}${j}"]`).getAttribute('index').substring(0,1);
+            const col = document.querySelector(`[index="${i}${j}"]`).getAttribute('index').substring(1,2);
+            game.playRound(row, col);
         });
     }
 }
+
+const newGameButton = document.querySelector('#newGameButton');
+
+newGameButton.addEventListener('click', () => {
+    game = gameController();
+})
