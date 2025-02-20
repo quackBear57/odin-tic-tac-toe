@@ -177,4 +177,24 @@ function gameController(
     };
 }
 
-const game = gameController();
+// UI
+
+const gameContainer = document.querySelector(".gameContainer");
+
+for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 3; j++) {
+        const square = document.createElement("div");
+        // square.classList(`gameSquare index${i}${j}`);
+        square.setAttribute('class', `gameSquare row${i} col${j}`);
+        square.setAttribute('row', `${i}`);
+        square.setAttribute('col', `${j}`);
+        square.textContent = "square";
+        gameContainer.appendChild(square);
+
+        square.addEventListener("click", () => {
+            const row = document.querySelector(`[row="${i}"]`).getAttribute('row');
+            const col = document.querySelector(`[col="${j}"]`).getAttribute('col');
+            console.log(`${row}, ${col}`);
+        });
+    }
+}
