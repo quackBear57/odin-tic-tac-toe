@@ -11,13 +11,33 @@
         <h1>Tic-Tac-Toe Game</h1>
     </div>
     <div class="main">
-        <div class="names"></div>
+        <div class="Turn">
+            <h3>Current player's turn: </h3>
+            <h3 id="currentPlayer">blank</h3>
+        </div>
 
         <div class="gameContainer">
             <!-- squares -->
         </div>
 
         <div class="buttons">
+            <h4 id="playerHeading">Player Names</h4>
+            <div class="inputs">
+                <label for="player1Name">
+                    Player 1: 
+                    <input type="text"
+                        placeholder="Player 1"
+                        name="player1Name"
+                        id="player1Name">
+                </label>
+                <label for="player2Name">
+                    Player 2: 
+                    <input type="text"
+                        placeholder="Player 2"
+                        name="player2Name"
+                        id="player2Name">
+                </label>
+            </div>
             <button id="newGameButton">New Game</button>
         </div>
     </div>

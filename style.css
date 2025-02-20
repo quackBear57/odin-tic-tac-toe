@@ -8,7 +8,7 @@ body {
     align-items: center;
 }
 
-h1 {
+h1, h2, h3, h4 {
     margin: 0;
 }
 
@@ -16,7 +16,7 @@ h1 {
     display: grid;
     justify-content: center;
     grid-template-columns: repeat(3, 1fr);
-    margin: 50px 0;
+    margin: 20px 0;
 }
 
 .gameSquare {
@@ -36,4 +36,11 @@ h1 {
 
 .col0, .col1 {
     border-right: solid 1px rgb(2, 162, 255);
+}
+
+.inputs {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin: 10px 0;
 }

@@ -99,6 +99,10 @@ function gameboard() {
                 board[i][j] = square();
             }
         }
+        const squareDivs = document.querySelectorAll(".gameSquare");
+        for (const squareDiv of squareDivs) {
+            squareDiv.textContent = " ";
+        }
     }
 
 
@@ -155,13 +159,13 @@ function gameController(
         if (postRound.endGame == true) {
             board.printBoard();
             console.log(`Game over! ${getActivePlayer().name} wins!`);
-            board.resetBoard();
-            printNewRound();
+            // board.resetBoard();
+            // printNewRound();
         } else if (postRound.tieGame == true) {
             board.printBoard();
             console.log('Game over! Tie!');
-            board.resetBoard();
-            printNewRound();
+            // board.resetBoard();
+            // printNewRound();
         } else if (postRound.changeTurns == true) {
             changePlayers();
             printNewRound();
@@ -170,11 +174,16 @@ function gameController(
         }
     };
 
+    const resetGame = () => {
+        board.resetBoard();
+    }
+
     printNewRound();
 
     return {
         playRound,
-        getActivePlayer
+        getActivePlayer,
+        resetGame
     };
 }
 
@@ -190,7 +199,7 @@ for (let i = 0; i < 3; i++) {
         square.setAttribute('class', `gameSquare row${i} col${j}`);
         square.setAttribute('index', `${i}${j}`);
         // square.setAttribute('col', `${j}`);
-        square.textContent = "square";
+        square.textContent = "";
         gameContainer.appendChild(square);
 
         square.addEventListener("click", () => {
@@ -204,5 +213,8 @@ for (let i = 0; i < 3; i++) {
 const newGameButton = document.querySelector('#newGameButton');
 
 newGameButton.addEventListener('click', () => {
-    game = gameController();
+    const player1Name = document.querySelector('#player1Name').value;
+    const player2Name = document.querySelector('#player2Name').value;
+    game = gameController(player1Name, player2Name);
+    game.resetGame();
 })
